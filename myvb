@@ -1,0 +1,72 @@
+Sub Gentmt999()
+'
+' GenMT999
+'
+
+'
+    Sheets("mt999").Select
+    Columns("A:A").Select
+    Selection.ClearContents
+    Range("A1").Select
+    Sheets("GenMT").Select
+    Range("A1").Select
+    Sheets("GenMT").Select
+    Range("B4:R1000").Select
+    Application.CutCopyMode = False
+    ActiveWorkbook.Worksheets("GenMT").Sort.SortFields.Clear
+    ActiveWorkbook.Worksheets("GenMT").Sort.SortFields.Add Key:=Range("K4:K1000"), _
+        SortOn:=xlSortOnValues, Order:=xlDescending, DataOption:=xlSortNormal
+    With ActiveWorkbook.Worksheets("GenMT").Sort
+        .SetRange Range("B4:R1000")
+        .Header = xlGuess
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+    Range("b4").Select
+    endreport = "n"
+    Do While endreport = "n"
+        If ActiveCell.Offset(0, 4).Value = "MT999" Then
+            tag20 = ActiveCell.Offset(0, 0).Value
+            If Len(ActiveCell.Offset(0, 3).Value) = 8 Then
+                receiver = ActiveCell.Offset(0, 3).Value & "XXXXN"
+            Else
+                receiver = Mid(ActiveCell.Offset(0, 3).Value, 1, 8) & "X" & Mid(ActiveCell.Offset(0, 3).Value, 9, 3) & "N"
+            End If
+            TAG21 = ActiveCell.Offset(0, 1).Value
+            tag79 = ActiveCell.Offset(0, 2).Value
+            ActiveCell.Offset(0, 5).Value = 1
+            ActiveCell.Offset(1, 0).Select
+            If ActiveCell.Offset(0, 4).Value = "MT999" Then
+                endreport = "n"
+            Else
+                endreport = "y"
+            End If
+            Sheets("mt999").Select
+            ActiveCell.Value = "{1:F01SICOTHBKAXXX0000000000}{2:I999" & receiver & "}{4:"
+            ActiveCell.Offset(1, 0).Select
+            ActiveCell.Value = ":20:" & tag20
+            ActiveCell.Offset(1, 0).Select
+            ActiveCell.Value = ":21:" & TAG21
+            ActiveCell.Offset(1, 0).Select
+            ActiveCell.Value = ":79:" & tag79
+            ActiveCell.Offset(1, 0).Select
+            If endreport = "y" Then
+                ActiveCell.Value = "-}"
+            Else
+                ActiveCell.Value = "-}$"
+                ActiveCell.Offset(1, 0).Select
+            End If
+            Sheets("GenMT").Select
+        Else
+           endreport = "y"
+        End If
+    Loop
+    ActiveWorkbook.Save
+    Sheets("mt999").Select
+    Range("A1").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    MsgBox ("Success Gent MT999 and Copy This Text Send To SWIFT")
+
+End Sub
